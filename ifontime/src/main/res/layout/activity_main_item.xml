@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+   <TextView
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:textAppearance="?android:attr/textAppearanceMedium"
+           android:text="Engenharia de Software"
+           android:id="@+id/textView"
+           android:layout_gravity="left|center_vertical"/>
+
+   <TableLayout
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_gravity="left|center_vertical">
+
+      <TableRow
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+
+         <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textAppearance="?android:attr/textAppearanceMedium"
+                 android:text="07:40 - 09:40"
+                 android:id="@+id/textView2"
+                 android:layout_marginRight="10dip"/>
+
+         <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:textAppearance="?android:attr/textAppearanceMedium"
+                 android:text="BII - Sala 2"
+                 android:id="@+id/textView3"/>
+      </TableRow>
+   </TableLayout>
+
+   <TextView
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:textAppearance="?android:attr/textAppearanceSmall"
+           android:text="Prof. Igor Valente"
+           android:id="@+id/textView4"/>
+</LinearLayout>

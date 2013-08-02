@@ -4,7 +4,11 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 
+import org.latin.ifce.ifontime.model.HorarioHelper;
+
 public class MainActivity extends Activity {
+
+   HorarioHelper model = new HorarioHelper(getApplicationContext());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

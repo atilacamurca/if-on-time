@@ -4,5 +4,24 @@
     <string name="app_name">IF on time</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+   <string name="sql_create_table_horarios"><![CDATA[
+           create table horarios (
+               _id integer primary key autoincrement,
+               disciplina text not null,
+               horario_inicio text not null,
+               horario_fim text not null,
+               sala text not null,
+               professor text not null,
+               dia_da_semana integer not null
+           );
+           ]]>
+   </string>
+   <string name="sql_insert_default"><![CDATA[
+           insert into horarios (disciplina, horario_inicio,
+            horario_fim, sala, professor, dia_da_semana) values
+            ('Engenharia de Software', '07:40', '10:00', 'BI - Lab. Info', 'Igor Valente', 1);
+           ]]></string>
+   <string name="back_text">Back</string>
+   <string name="next_text">Next</string>
 
 </resources>
