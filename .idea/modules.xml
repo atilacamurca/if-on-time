@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ifontime/ifontime.iml" filepath="$PROJECT_DIR$/ifontime/ifontime.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ifontimeProject.iml" filepath="$PROJECT_DIR$/ifontimeProject.iml" />
+    </modules>
+  </component>
+</project>
+
