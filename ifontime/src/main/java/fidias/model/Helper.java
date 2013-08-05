@@ -12,17 +12,17 @@ public class Helper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "if-on-time.db";
 	private static final int VERSION = 1;
 	private static final String DROP_IF_EXISTS = "DROP TABLE IF EXISTS ";
-	protected Resources resources = null;
-	
+	protected Context context;
+
 	public Helper(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
-		resources = context.getResources();
+        this.context = context;
 	}
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(resources.getString(R.string.sql_create_table_horarios));
-      db.execSQL(resources.getString(R.string.sql_insert_default));
+		db.execSQL(context.getString(R.string.sql_create_table_horarios));
+      db.execSQL(context.getString(R.string.sql_insert_default));
 	}
 
 	@Override
