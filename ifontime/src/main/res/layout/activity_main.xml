@@ -40,7 +40,7 @@
    <ListView
            android:layout_width="fill_parent"
            android:layout_height="wrap_content"
-           android:id="@+id/listView"
+           android:id="@+id/lvHorarios"
            android:layout_gravity="left|center_vertical"
            tools:listitem="@layout/activity_main_item"/>
 </LinearLayout>
