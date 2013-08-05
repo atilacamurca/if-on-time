@@ -19,7 +19,7 @@
    <string name="sql_insert_default"><![CDATA[
            insert into horarios (disciplina, horario_inicio,
             horario_fim, sala, professor, dia_da_semana) values
-            ('Engenharia de Software', '07:40', '10:00', 'BI - Lab. Info', 'Igor Valente', 1);
+            (\'Engenharia de Software\', \'07:40\', \'10:00\', \'BI - Lab. Info\', \'Igor Valente\', 1);
            ]]></string>
    <string name="back_text">Back</string>
    <string name="next_text">Next</string>
