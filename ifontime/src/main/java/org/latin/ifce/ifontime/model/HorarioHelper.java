@@ -14,11 +14,14 @@ public class HorarioHelper extends Helper {
       super(context);
    }
 
-   public Cursor listar(String diaDaSemana) {
+   public Cursor listar(int diaDaSemana) {
       StringBuilder builder = new StringBuilder();
       builder.append("SELECT _id, disciplina, horario_inicio, horario_fim, ");
       builder.append("sala, professor, dia_da_semana ");
       builder.append("FROM horarios WHERE dia_da_semana = ? ");
-      return getReadableDatabase().rawQuery(builder.toString(), new String[]{diaDaSemana});
+      return getReadableDatabase().rawQuery(builder.toString(),
+              new String[]{
+                      String.valueOf(diaDaSemana)
+              });
    }
 }

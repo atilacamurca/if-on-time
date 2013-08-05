@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">IF on time</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_load_schedules">Load schedules</string>
     <string name="hello_world">Hello world!</string>
    <string name="sql_create_table_horarios"><![CDATA[
            create table horarios (
@@ -23,5 +23,6 @@
            ]]></string>
    <string name="back_text">Back</string>
    <string name="next_text">Next</string>
+   <string name="loading_schedules_text">Loading schedules ...</string>
 
 </resources>
