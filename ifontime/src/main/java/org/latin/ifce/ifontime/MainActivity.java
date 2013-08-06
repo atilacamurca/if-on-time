@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -136,7 +137,7 @@ public class MainActivity extends Activity {
 
    private void carregar() {
       lvHorarios = (ListView) findViewById(R.id.lvHorarios);
-      model = helper.listar(diaDaSemana);
+      model = helper.list(diaDaSemana);
       startManagingCursor(model);
       adapter = new ListaAdapter(model);
       lvHorarios.setAdapter(adapter);
@@ -169,6 +170,12 @@ public class MainActivity extends Activity {
             RequestSchedule request = new RequestSchedule();
             JSONObject json = request.getAnswer(hash);
 
+            String error = json.getString("error");
+            if ("".equals(error)) {
+               Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+               return;
+            }
+
             helper.deleteAll();
             JSONArray rows = json.getJSONArray("rows");
             for (int i = 0; i < rows.length(); i++) {
@@ -177,15 +184,24 @@ public class MainActivity extends Activity {
                values.put("disciplina", row.getString("disciplina"));
                values.put("horario_inicio", row.getString("horario_inicio"));
                values.put("horario_fim", row.getString("horario_fim"));
+               values.put("sala", row.getString("sala"));
+               values.put("professor", row.getString("professor"));
+               values.put("dia_da_semana", row.getInt("dia_da_semana"));
+
+               helper.create(values);
+               Log.i("MainActivity", "inserting " + i + " value(s)");
             }
 
+         } catch (JSONException e) {
+            Log.e("RequestSchedule", e.getMessage(), e);
+         } catch (Exception e) {
+            Log.e("RequestSchedule", e.getMessage(), e);
+         } finally {
             Message message = handler.obtainMessage();
             Bundle bundle = new Bundle();
             bundle.putBoolean("done", true);
             message.setData(bundle);
             handler.sendMessage(message);
-         } catch (JSONException e) {
-            e.printStackTrace();
          }
       }
    }

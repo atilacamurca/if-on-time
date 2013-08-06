@@ -6,6 +6,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -27,24 +28,25 @@ public class RequestSchedule {
    private JSONObject obj;
    private String answer;
    // TODO: colocar URL em SharedPreferences
-   private static final String URL = "http://10.0.0.2:9669";
+   private static final String URL = "http://10.0.0.2:9669/get";
 
-   public JSONObject getAnswer(String hash) {
+   public JSONObject getAnswer(String hash) throws Exception {
       send(hash);
       readAnswer();
       parseJSON();
       return obj;
    }
 
-   private void parseJSON() {
+   private void parseJSON() throws JSONException {
       try {
          obj = new JSONObject(answer);
       } catch (JSONException e) {
          Log.e("RequestSchedule", "Error while parsing json", e);
+         throw e;
       }
    }
 
-   private void readAnswer() {
+   private void readAnswer() throws IOException {
       try {
          BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
          StringBuilder builder = new StringBuilder();
@@ -56,10 +58,11 @@ public class RequestSchedule {
          answer = builder.toString();
       } catch (IOException e) {
          Log.e("RequestSchedule", "Error while reading answer", e);
+         throw e;
       }
    }
 
-   private void send(String hash) {
+   private void send(String hash) throws Exception {
       try {
          DefaultHttpClient httpClient = new DefaultHttpClient();
          HttpGet get = new HttpGet(URL);
@@ -69,8 +72,11 @@ public class RequestSchedule {
          HttpResponse response = httpClient.execute(get);
          HttpEntity entity = response.getEntity();
          stream = entity.getContent();
+      } catch (HttpHostConnectException e) {
+         throw e;
       } catch (Exception e) {
          Log.e("RequestSchedule", "Error while sending requisition", e);
+         throw e;
       }
    }
 }

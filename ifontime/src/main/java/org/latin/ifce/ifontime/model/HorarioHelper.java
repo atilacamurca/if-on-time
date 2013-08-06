@@ -1,5 +1,6 @@
 package org.latin.ifce.ifontime.model;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -14,7 +15,7 @@ public class HorarioHelper extends Helper {
       super(context);
    }
 
-   public Cursor listar(int diaDaSemana) {
+   public Cursor list(int diaDaSemana) {
       StringBuilder builder = new StringBuilder();
       builder.append("SELECT _id, disciplina, horario_inicio, horario_fim, ");
       builder.append("sala, professor, dia_da_semana ");
@@ -28,5 +29,9 @@ public class HorarioHelper extends Helper {
    public void deleteAll() {
       String sql = "DELETE FROM horarios";
       getWritableDatabase().rawQuery(sql, null);
+   }
+
+   public void create(ContentValues values) {
+      create("horarios", null, values);
    }
 }
