@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import org.latin.ifce.ifontime.controller.RequestSchedule;
 import org.latin.ifce.ifontime.model.HorarioHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class MainActivity extends Activity {
@@ -38,7 +39,10 @@ public class MainActivity extends Activity {
    private HorarioHelper helper = new HorarioHelper(this);
    private ListaAdapter adapter;
    private ListView lvHorarios;
+   private TextView tvData;
    private int diaDaSemana;
+   private Calendar calendar = Calendar.getInstance();
+   String data;
 
    private ProgressDialog dialog;
    private ProgressThread thread;
@@ -49,9 +53,7 @@ public class MainActivity extends Activity {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_main);
 
-      Calendar calendar = Calendar.getInstance();
       diaDaSemana = calendar.get(Calendar.DAY_OF_WEEK);
-
       carregar();
    }
 
@@ -120,7 +122,14 @@ public class MainActivity extends Activity {
    }
 
    private void loadSchedules() {
+       model = helper.listar(diaDaSemana);
+       startManagingCursor(model);
+       adapter = new ListaAdapter(model);
+       lvHorarios.setAdapter(adapter);
+
       Log.i("MainActivity", "loading schedules ...");
+      data = new SimpleDateFormat("EEEE\nd, MMM").format(calendar.getTime());
+      tvData.setText(data);
    }
 
    private static class HorarioHolder {
@@ -166,10 +175,8 @@ public class MainActivity extends Activity {
 
    private void carregar() {
       lvHorarios = (ListView) findViewById(R.id.lvHorarios);
-      model = helper.listar(diaDaSemana);
-      startManagingCursor(model);
-      adapter = new ListaAdapter(model);
-      lvHorarios.setAdapter(adapter);
+      tvData = (TextView) findViewById(R.id.tvData);
+      loadSchedules();
    }
 
    final Handler handler = new Handler() {
@@ -219,4 +226,29 @@ public class MainActivity extends Activity {
          }
       }
    }
+
+    public void voltar(View v){
+        if(diaDaSemana==2){
+            diaDaSemana = 6;
+            calendar.add(calendar.DAY_OF_YEAR, -3);
+        }else{
+            diaDaSemana--;
+            calendar.add(calendar.DAY_OF_YEAR, -1);
+        }
+
+        carregar();
+    }
+
+    public void avancar(View v){
+        if(diaDaSemana==6){
+            diaDaSemana = 2;
+            calendar.add(calendar.DAY_OF_YEAR, 3);
+        }else{
+            diaDaSemana++;
+            calendar.add(calendar.DAY_OF_YEAR, 1);
+        }
+
+        carregar();
+    }
+
 }
