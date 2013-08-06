@@ -2,6 +2,7 @@ package org.latin.ifce.ifontime;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -19,6 +20,10 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.latin.ifce.ifontime.controller.RequestSchedule;
 import org.latin.ifce.ifontime.model.HorarioHelper;
 
 import java.util.Calendar;
@@ -63,13 +68,13 @@ public class MainActivity extends Activity {
    }
 
    @Override
-   protected Dialog onCreateDialog(int id) {
+   protected Dialog onCreateDialog(int id, Bundle args) {
       switch (id) {
          case PROGRESS_DIALOG:
             dialog = new ProgressDialog(this);
             dialog.setProgressStyle(PROGRESS_DIALOG);
             dialog.setMessage(getResources().getString(R.string.loading_schedules_text));
-            thread = new ProgressThread(handler);
+            thread = new ProgressThread(handler, args.getString("hash"));
             thread.start();
             return dialog;
          default:
@@ -78,7 +83,10 @@ public class MainActivity extends Activity {
    }
 
    private void clickLoadSchedules() {
-      showDialog(PROGRESS_DIALOG);
+      // TODO: mostrar entrada de dados pedindo hash e passar para dialog
+      Bundle args = new Bundle();
+      args.putString("hash", "a1b2");
+      showDialog(PROGRESS_DIALOG, args);
    }
 
    private void loadSchedules() {
@@ -148,22 +156,36 @@ public class MainActivity extends Activity {
 
    private class ProgressThread extends Thread {
       Handler handler = null;
+      String hash;
 
-      public ProgressThread(Handler handler) {
+      public ProgressThread(Handler handler, String hash) {
          this.handler = handler;
+         this.hash = hash;
       }
 
       @Override
       public void run() {
          try {
-            Thread.sleep(3000);
+            RequestSchedule request = new RequestSchedule();
+            JSONObject json = request.getAnswer(hash);
+
+            helper.deleteAll();
+            JSONArray rows = json.getJSONArray("rows");
+            for (int i = 0; i < rows.length(); i++) {
+               JSONObject row = rows.getJSONObject(i);
+               ContentValues values = new ContentValues();
+               values.put("disciplina", row.getString("disciplina"));
+               values.put("horario_inicio", row.getString("horario_inicio"));
+               values.put("horario_fim", row.getString("horario_fim"));
+            }
+
             Message message = handler.obtainMessage();
             Bundle bundle = new Bundle();
             bundle.putBoolean("done", true);
             message.setData(bundle);
             handler.sendMessage(message);
-         } catch (InterruptedException e) {
-            Log.e("MainActivity", e.getMessage());
+         } catch (JSONException e) {
+            e.printStackTrace();
          }
       }
    }

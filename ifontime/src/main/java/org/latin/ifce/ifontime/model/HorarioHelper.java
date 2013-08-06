@@ -24,4 +24,9 @@ public class HorarioHelper extends Helper {
                       String.valueOf(diaDaSemana)
               });
    }
+
+   public void deleteAll() {
+      String sql = "DELETE FROM horarios";
+      getWritableDatabase().rawQuery(sql, null);
+   }
 }
