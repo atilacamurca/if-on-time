@@ -1,9 +1,11 @@
 package org.latin.ifce.ifontime;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Activity;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,9 +88,35 @@ public class MainActivity extends Activity {
 
    private void clickLoadSchedules() {
       // TODO: mostrar entrada de dados pedindo hash e passar para dialog
-      Bundle args = new Bundle();
+
+      /*janela para input */
+       AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+       alert.setTitle(R.string.Title);
+       alert.setMessage(R.string.load_time);
+
+       // Set an EditText view to get user input
+       final EditText input = new EditText(this);
+       input.setHint(R.string.code_text);
+       alert.setView(input);
+
+       alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int whichButton) {
+               String value = input.getText().toString();
+               // Do something with value!
+
+               if( (value == null) || ("".equals(value))) {
+                   Toast.makeText(MainActivity.this, R.string.do_note_code_information, Toast.LENGTH_LONG).show();
+               } else {
+                   Log.i("MainActivity", value);
+               }
+           }
+       });
+       alert.show();
+
+       /*Bundle args = new Bundle();
       args.putString("hash", "a1b2");
-      showDialog(PROGRESS_DIALOG, args);
+      showDialog(PROGRESS_DIALOG, args);*/
    }
 
    private void loadSchedules() {
