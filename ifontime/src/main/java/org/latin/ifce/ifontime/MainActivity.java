@@ -87,7 +87,6 @@ public class MainActivity extends Activity {
    }
 
    private void clickLoadSchedules() {
-      // TODO: mostrar entrada de dados pedindo hash e passar para dialog
 
       /*janela para input */
        AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -102,25 +101,25 @@ public class MainActivity extends Activity {
 
        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int whichButton) {
-               String value = input.getText().toString();
-               // Do something with value!
+            String value = input.getText().toString();
+            // Do something with value!
 
-               if( (value == null) || ("".equals(value))) {
-                   Toast.makeText(MainActivity.this, R.string.do_note_code_information, Toast.LENGTH_LONG).show();
-               } else {
-                   Log.i("MainActivity", value);
-               }
+            if( (value == null) || ("".equals(value))) {
+               Toast.makeText(MainActivity.this, R.string.do_note_code_information, Toast.LENGTH_LONG).show();
+            } else {
+               Log.i("MainActivity", value);
+               Bundle args = new Bundle();
+               args.putString("hash", value);
+               showDialog(PROGRESS_DIALOG, args);
+            }
            }
        });
        alert.show();
-
-       /*Bundle args = new Bundle();
-      args.putString("hash", "a1b2");
-      showDialog(PROGRESS_DIALOG, args);*/
    }
 
    private void loadSchedules() {
       Log.i("MainActivity", "loading schedules ...");
+      // TODO: load schedules from database...
    }
 
    private static class HorarioHolder {
