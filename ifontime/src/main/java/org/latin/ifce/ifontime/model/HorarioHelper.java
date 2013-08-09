@@ -20,15 +20,15 @@ public class HorarioHelper extends Helper {
       builder.append("SELECT _id, disciplina, horario_inicio, horario_fim, ");
       builder.append("sala, professor, dia_da_semana ");
       builder.append("FROM horarios WHERE dia_da_semana = ? ");
+      builder.append("ORDER BY horario_inicio ");
       return getReadableDatabase().rawQuery(builder.toString(),
               new String[]{
                       String.valueOf(diaDaSemana)
               });
    }
 
-   public void deleteAll() {
-      String sql = "DELETE FROM horarios";
-      getWritableDatabase().rawQuery(sql, null);
+   public int deleteAll() {
+      return getWritableDatabase().delete("horarios", null, null);
    }
 
    public void create(ContentValues values) {

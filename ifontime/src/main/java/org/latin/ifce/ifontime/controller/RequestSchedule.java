@@ -10,6 +10,9 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +32,7 @@ public class RequestSchedule {
    private JSONObject obj;
    private String answer;
    // TODO: colocar URL em SharedPreferences
-   private static final String URL = "http://10.50.40.248:9669/get?";
+   private static final String URL = "http://10.50.40.248:8080/get?";
 
    public JSONObject getAnswer(String hash) throws Exception {
       send(hash);
@@ -65,7 +68,10 @@ public class RequestSchedule {
 
    private void send(String hash) throws Exception {
       try {
-         DefaultHttpClient httpClient = new DefaultHttpClient();
+         HttpParams httpparams = new BasicHttpParams();
+         HttpConnectionParams.setConnectionTimeout(httpparams, 30000);
+         HttpConnectionParams.setSoTimeout(httpparams, 1);
+         DefaultHttpClient httpClient = new DefaultHttpClient(httpparams);
          List<NameValuePair> params = new ArrayList<NameValuePair>();
          params.add(new BasicNameValuePair("hash", hash));
          String paramString = URLEncodedUtils.format(params, "utf-8");

@@ -25,8 +25,12 @@
    <string name="next_text">Next</string>
    <string name="loading_schedules_text">Loading schedules ...</string>
    <string name="Title">Shedules</string>
-   <string name="load_time">load time</string>
+   <string name="load_schedules">Load schedules</string>
    <string name="code_text">Code</string>
-   <string name="do_note_code_information">Do not code information!</string>
+   <string name="code_not_informed_err">Code not informed.</string>
+   <string name="network_not_available_err">Network not available.</string>
+   <string name="access_err">Error while accessing server.</string>
+   <string name="ok_text">Ok</string>
+   <string name="error_occurred">An error occurred</string>
 
 </resources>

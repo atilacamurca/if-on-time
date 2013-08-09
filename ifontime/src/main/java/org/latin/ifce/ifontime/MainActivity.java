@@ -1,12 +1,13 @@
 package org.latin.ifce.ifontime;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
@@ -24,12 +25,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.conn.HttpHostConnectException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.latin.ifce.ifontime.controller.RequestSchedule;
 import org.latin.ifce.ifontime.model.HorarioHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class MainActivity extends Activity {
@@ -38,26 +41,29 @@ public class MainActivity extends Activity {
    private HorarioHelper helper = new HorarioHelper(this);
    private ListaAdapter adapter;
    private ListView lvHorarios;
+   private TextView tvData;
    private int diaDaSemana;
+   private Calendar calendar = Calendar.getInstance();
+   private String data;
 
    private ProgressDialog dialog;
    private ProgressThread thread;
    private static final int PROGRESS_DIALOG = 0;
+
+   private boolean hasErrors = false;
+   private Exception error = null;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_main);
 
-      Calendar calendar = Calendar.getInstance();
       diaDaSemana = calendar.get(Calendar.DAY_OF_WEEK);
-
       carregar();
    }
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      // Inflate the menu; this adds items to the action bar if it is present.
       getMenuInflater().inflate(R.menu.main, menu);
       return true;
    }
@@ -65,61 +71,126 @@ public class MainActivity extends Activity {
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       if (item.getItemId() == R.id.action_load_schedules) {
-         clickLoadSchedules();
-         return true;
+         if (isNetworkAvailable()) {
+            clickLoadSchedules();
+            return true;
+         }
+         error(new Exception(getString(R.string.network_not_available_err)));
+         return false;
       }
       return super.onOptionsItemSelected(item);
    }
 
-   @Override
-   protected Dialog onCreateDialog(int id, Bundle args) {
-      switch (id) {
-         case PROGRESS_DIALOG:
-            dialog = new ProgressDialog(this);
-            dialog.setProgressStyle(PROGRESS_DIALOG);
-            dialog.setMessage(getResources().getString(R.string.loading_schedules_text));
-            thread = new ProgressThread(handler, args.getString("hash"));
-            thread.start();
-            return dialog;
-         default:
-            return null;
-      }
+   private void showLoadingSchedulesDialog(Bundle args) {
+      dialog = new ProgressDialog(this);
+      dialog.setProgressStyle(PROGRESS_DIALOG);
+      dialog.setMessage(getResources().getString(R.string.loading_schedules_text));
+      thread = new ProgressThread(handler, args.getString("hash"));
+      thread.start();
+      dialog.show();
+      Log.d("MainActivity", "starting thread ...");
    }
 
    private void clickLoadSchedules() {
-
-      /*janela para input */
        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-       alert.setTitle(R.string.Title);
-       alert.setMessage(R.string.load_time);
-
-       // Set an EditText view to get user input
+       alert.setTitle(R.string.load_schedules);
        final EditText input = new EditText(this);
        input.setHint(R.string.code_text);
        alert.setView(input);
 
-       alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int whichButton) {
+       alert.setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int whichButton) {
             String value = input.getText().toString();
-            // Do something with value!
 
             if( (value == null) || ("".equals(value))) {
-               Toast.makeText(MainActivity.this, R.string.do_note_code_information, Toast.LENGTH_LONG).show();
+               Toast.makeText(MainActivity.this, R.string.code_not_informed_err, Toast.LENGTH_LONG).show();
             } else {
-               Log.i("MainActivity", value);
                Bundle args = new Bundle();
                args.putString("hash", value);
-               showDialog(PROGRESS_DIALOG, args);
+               showLoadingSchedulesDialog(args);
             }
-           }
+          }
        });
        alert.show();
    }
 
    private void loadSchedules() {
       Log.i("MainActivity", "loading schedules ...");
-      // TODO: load schedules from database...
+      if (validate()) {
+         data = new SimpleDateFormat("EEEE\nd, MMM").format(calendar.getTime());
+         tvData.setText(data);
+
+         model = helper.list(diaDaSemana);
+         startManagingCursor(model);
+         adapter = new ListaAdapter(model);
+         lvHorarios.setAdapter(adapter);
+      }
+   }
+
+   private void sendRequest(String hash) {
+      try {
+         RequestSchedule request = new RequestSchedule();
+         JSONObject json = request.getAnswer(hash);
+
+         String err = json.getString("error");
+         if (! "".equals(err)) {
+            Log.d("[DEBUG]", err);
+            hasErrors = true;
+            error = new Exception(err);
+            return;
+         }
+
+         int deleted = helper.deleteAll();
+         Log.d("MainActivity", "deleting " + deleted + " row(s)...");
+
+         JSONArray rows = json.getJSONArray("rows");
+         for (int i = 0; i < rows.length(); i++) {
+            JSONObject row = rows.getJSONObject(i);
+            ContentValues values = new ContentValues();
+            values.put("disciplina", row.getString("disciplina"));
+            values.put("horario_inicio", row.getString("horario_inicio"));
+            values.put("horario_fim", row.getString("horario_fim"));
+            values.put("sala", row.getString("sala"));
+            values.put("professor", row.getString("professor"));
+            values.put("dia_da_semana", row.getInt("dia_da_semana"));
+
+            helper.create(values);
+            Log.i("MainActivity", "inserting " + i + " value(s)");
+         }
+      } catch (HttpHostConnectException e) {
+         hasErrors = true;
+         error = new Exception(getString(R.string.access_err));
+      } catch (JSONException e) {
+         Log.e("RequestSchedule", e.getMessage(), e);
+         hasErrors = true;
+         error = e;
+      } catch (Exception e) {
+         Log.e("RequestSchedule", e.getMessage(), e);
+         hasErrors = true;
+         error = e;
+      }
+   }
+
+   public boolean validate() {
+      if (hasErrors) {
+         error(error);
+         hasErrors = false;
+         return false;
+      }
+      return true;
+   }
+
+   public boolean isNetworkAvailable() {
+      ConnectivityManager cm = (ConnectivityManager)
+              getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+      // if no network is available networkInfo will be null
+      // otherwise check if we are connected
+      if (networkInfo != null && networkInfo.isConnected()) {
+         return true;
+      }
+      return false;
    }
 
    private static class HorarioHolder {
@@ -165,10 +236,8 @@ public class MainActivity extends Activity {
 
    private void carregar() {
       lvHorarios = (ListView) findViewById(R.id.lvHorarios);
-      model = helper.list(diaDaSemana);
-      startManagingCursor(model);
-      adapter = new ListaAdapter(model);
-      lvHorarios.setAdapter(adapter);
+      tvData = (TextView) findViewById(R.id.tvData);
+      loadSchedules();
    }
 
    final Handler handler = new Handler() {
@@ -176,7 +245,7 @@ public class MainActivity extends Activity {
          boolean done = msg.getData().getBoolean("done");
          if (done) {
             if (dialog.isShowing()) {
-               dismissDialog(PROGRESS_DIALOG);
+               dialog.dismiss();
             }
             loadSchedules();
          }
@@ -194,43 +263,45 @@ public class MainActivity extends Activity {
 
       @Override
       public void run() {
-         try {
-            RequestSchedule request = new RequestSchedule();
-            JSONObject json = request.getAnswer(hash);
+         sendRequest(hash);
 
-            String error = json.getString("error");
-            if ("".equals(error)) {
-               Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
-               return;
-            }
-
-            helper.deleteAll();
-            JSONArray rows = json.getJSONArray("rows");
-            for (int i = 0; i < rows.length(); i++) {
-               JSONObject row = rows.getJSONObject(i);
-               ContentValues values = new ContentValues();
-               values.put("disciplina", row.getString("disciplina"));
-               values.put("horario_inicio", row.getString("horario_inicio"));
-               values.put("horario_fim", row.getString("horario_fim"));
-               values.put("sala", row.getString("sala"));
-               values.put("professor", row.getString("professor"));
-               values.put("dia_da_semana", row.getInt("dia_da_semana"));
-
-               helper.create(values);
-               Log.i("MainActivity", "inserting " + i + " value(s)");
-            }
-
-         } catch (JSONException e) {
-            Log.e("RequestSchedule", e.getMessage(), e);
-         } catch (Exception e) {
-            Log.e("RequestSchedule", e.getMessage(), e);
-         } finally {
-            Message message = handler.obtainMessage();
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("done", true);
-            message.setData(bundle);
-            handler.sendMessage(message);
-         }
+         Message message = handler.obtainMessage();
+         Bundle bundle = new Bundle();
+         bundle.putBoolean("done", true);
+         message.setData(bundle);
+         handler.sendMessage(message);
       }
+   }
+
+    public void voltar(View v){
+        if(diaDaSemana==2){
+            diaDaSemana = 6;
+            calendar.add(calendar.DAY_OF_YEAR, -3);
+        }else{
+            diaDaSemana--;
+            calendar.add(calendar.DAY_OF_YEAR, -1);
+        }
+
+        carregar();
+    }
+
+    public void avancar(View v){
+        if(diaDaSemana==6){
+            diaDaSemana = 2;
+            calendar.add(calendar.DAY_OF_YEAR, 3);
+        }else{
+            diaDaSemana++;
+            calendar.add(calendar.DAY_OF_YEAR, 1);
+        }
+
+        carregar();
+    }
+
+   public void error(Exception e) {
+      AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+      dialog.setTitle(R.string.error_occurred);
+      dialog.setMessage(e.getMessage());
+      dialog.setNeutralButton(R.string.ok_text, null);
+      dialog.show();
    }
 }
