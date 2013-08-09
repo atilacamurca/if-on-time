@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ifontime/ifontime.iml" filepath="$PROJECT_DIR$/ifontime/ifontime.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ifontimeProject.iml" filepath="$PROJECT_DIR$/ifontimeProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ifontime/build/source/buildConfig/buildConfig.iml" filepath="$PROJECT_DIR$/ifontime/build/source/buildConfig/buildConfig.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ifontime/build/manifests/debug/debug.iml" filepath="$PROJECT_DIR$/ifontime/build/manifests/debug/debug.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ifontime/src/main/main.iml" filepath="$PROJECT_DIR$/ifontime/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ifontime/build/source/r/r.iml" filepath="$PROJECT_DIR$/ifontime/build/source/r/r.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ifontime/build/manifests/release/release.iml" filepath="$PROJECT_DIR$/ifontime/build/manifests/release/release.iml" />
     </modules>
   </component>
 </project>
