@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -57,12 +58,18 @@ public class MainActivity extends Activity {
    private boolean hasErrors = false;
    private Exception error = null;
 
+   private static final String DIA_DA_SEMANA = "diaDaSemana";
+   private static final String CALENDARIO = "calendar";
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_main);
-
-      diaDaSemana = calendar.get(Calendar.DAY_OF_WEEK);
+      if(savedInstanceState != null) {
+          diaDaSemana = savedInstanceState.getInt(DIA_DA_SEMANA);
+          calendar.setTimeInMillis(savedInstanceState.getLong(CALENDARIO));
+      } else {
+          diaDaSemana = calendar.get(Calendar.DAY_OF_WEEK);
+      }
       load();
    }
 
@@ -72,7 +79,14 @@ public class MainActivity extends Activity {
       return true;
    }
 
-   @Override
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(CALENDARIO,calendar.getTime().getTime());
+        outState.putInt(DIA_DA_SEMANA, diaDaSemana);
+    }
+
+    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       if (item.getItemId() == R.id.action_load_schedules) {
          if (isNetworkAvailable()) {
@@ -133,6 +147,7 @@ public class MainActivity extends Activity {
          adapter = new ListaAdapter(model);
          lvHorarios.setAdapter(adapter);
       }
+
    }
 
    private void sendRequest(String hash) {
@@ -249,6 +264,7 @@ public class MainActivity extends Activity {
       lvHorarios = (ListView) findViewById(R.id.lvHorarios);
       tvData = (TextView) findViewById(R.id.tvData);
       loadSchedules();
+
    }
 
    final Handler handler = new Handler() {
