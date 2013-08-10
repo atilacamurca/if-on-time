@@ -9,7 +9,8 @@
            android:layout_width="fill_parent"
            android:layout_height="wrap_content"
            android:layout_gravity="left|center_vertical"
-           android:stretchColumns="1">
+           android:stretchColumns="1"
+           style="@style/MainToolBar">
 
       <TableRow
               android:layout_width="fill_parent"
@@ -19,7 +20,7 @@
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:text="@string/back_text"
-                 android:id="@+id/btnVoltar"
+                 android:id="@+id/btnBack"
                  android:onClick="onBackButtonClick"/>
 
          <TextView
@@ -33,7 +34,7 @@
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:text="@string/next_text"
-                 android:id="@+id/btnAvancar"
+                 android:id="@+id/btnNext"
                  android:onClick="onNextButtonClick"/>
       </TableRow>
    </TableLayout>
@@ -43,5 +44,6 @@
            android:layout_height="wrap_content"
            android:id="@+id/lvHorarios"
            android:layout_gravity="left|center_vertical"
-           tools:listitem="@layout/activity_main_item"/>
+           tools:listitem="@layout/activity_main_item"
+           style="@style/SchedulesListView"/>
 </LinearLayout>

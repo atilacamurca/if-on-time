@@ -9,4 +9,9 @@
         <!-- API 14 theme customizations can go here. -->
     </style>
 
+   <style name="SchedulesListView">
+      <item name="android:paddingLeft">4dp</item>
+      <item name="android:paddingRight">4dp</item>
+   </style>
+
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <style name="AppBaseTheme" parent="android:Theme.Black">
+      <!-- API 11 theme customizations can go here. -->
+   </style>
+
+   <style name="SchedulesListView">
+      <item name="android:paddingTop">4dp</item>
+      <item name="android:paddingLeft">4dp</item>
+      <item name="android:paddingRight">4dp</item>
+      <item name="android:divider">#FFFFFF</item>
+      <item name="android:dividerHeight">0.1dp</item>
+   </style>
+
+   <style name="MainToolBar">
+      <item name="android:paddingTop">4dp</item>
+   </style>
+</resources>
