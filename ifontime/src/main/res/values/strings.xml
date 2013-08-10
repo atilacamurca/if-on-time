@@ -5,8 +5,7 @@
     <string name="app_preferences">Preferences - IF on time</string>
     <string name="action_load_schedules">Load schedules</string>
     <string name="action_preferences">Preferences</string>
-    <string name="hello_world">Hello world!</string>
-   <string name="sql_create_table_horarios"><![CDATA[
+    <string name="sql_create_table_horarios"><![CDATA[
            create table horarios (
                _id integer primary key autoincrement,
                disciplina text not null,
@@ -18,11 +17,6 @@
            );
            ]]>
    </string>
-   <string name="sql_insert_default"><![CDATA[
-           insert into horarios (disciplina, horario_inicio,
-            horario_fim, sala, professor, dia_da_semana) values
-            (\'Engenharia de Software\', \'07:40\', \'10:00\', \'BI - Lab. Info\', \'Igor Valente\', 1);
-           ]]></string>
    <string name="back_text">Back</string>
    <string name="next_text">Next</string>
    <string name="loading_schedules_text">Loading schedules ...</string>
