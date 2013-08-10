@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.latin.ifce.ifontime.controller.RequestSchedule;
 import org.latin.ifce.ifontime.model.HorarioHelper;
+import org.latin.ifce.ifontime.view.Preferences;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -59,7 +63,7 @@ public class MainActivity extends Activity {
       setContentView(R.layout.activity_main);
 
       diaDaSemana = calendar.get(Calendar.DAY_OF_WEEK);
-      carregar();
+      load();
    }
 
    @Override
@@ -77,6 +81,9 @@ public class MainActivity extends Activity {
          }
          error(new Exception(getString(R.string.network_not_available_err)));
          return false;
+      } else if (item.getItemId() == R.id.action_preferences) {
+         startActivity(new Intent(this, Preferences.class));
+         return true;
       }
       return super.onOptionsItemSelected(item);
    }
@@ -130,7 +137,11 @@ public class MainActivity extends Activity {
 
    private void sendRequest(String hash) {
       try {
-         RequestSchedule request = new RequestSchedule();
+         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+         String host = preferences.getString("pref_host", "10.50.40.22");
+         String port = preferences.getString("pref_port", "8080");
+
+         RequestSchedule request = new RequestSchedule(host, port);
          JSONObject json = request.getAnswer(hash);
 
          String err = json.getString("error");
@@ -234,7 +245,7 @@ public class MainActivity extends Activity {
       }
    }
 
-   private void carregar() {
+   private void load() {
       lvHorarios = (ListView) findViewById(R.id.lvHorarios);
       tvData = (TextView) findViewById(R.id.tvData);
       loadSchedules();
@@ -273,28 +284,34 @@ public class MainActivity extends Activity {
       }
    }
 
-    public void voltar(View v){
-        if(diaDaSemana==2){
-            diaDaSemana = 6;
-            calendar.add(calendar.DAY_OF_YEAR, -3);
-        }else{
+    public void onBackButtonClick(View v) {
+        if(diaDaSemana == 2) {
+           diaDaSemana = 6;
+           calendar.add(calendar.DAY_OF_YEAR, -3);
+        } else if (diaDaSemana == 1) {
+           diaDaSemana = 6;
+           calendar.add(calendar.DAY_OF_YEAR, -2);
+        } else {
             diaDaSemana--;
             calendar.add(calendar.DAY_OF_YEAR, -1);
         }
 
-        carregar();
+        load();
     }
 
-    public void avancar(View v){
-        if(diaDaSemana==6){
+    public void onNextButtonClick(View v) {
+        if(diaDaSemana == 6) {
             diaDaSemana = 2;
             calendar.add(calendar.DAY_OF_YEAR, 3);
-        }else{
+        } else if (diaDaSemana == 7) {
+           diaDaSemana = 2;
+           calendar.add(calendar.DAY_OF_YEAR, 2);
+        } else {
             diaDaSemana++;
             calendar.add(calendar.DAY_OF_YEAR, 1);
         }
 
-        carregar();
+        load();
     }
 
    public void error(Exception e) {

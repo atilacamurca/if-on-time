@@ -20,7 +20,7 @@
                  android:layout_height="wrap_content"
                  android:text="@string/back_text"
                  android:id="@+id/btnVoltar"
-                 android:onClick="voltar"/>
+                 android:onClick="onBackButtonClick"/>
 
          <TextView
                  android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
                  android:layout_height="wrap_content"
                  android:text="@string/next_text"
                  android:id="@+id/btnAvancar"
-                 android:onClick="avancar"/>
+                 android:onClick="onNextButtonClick"/>
       </TableRow>
    </TableLayout>
 

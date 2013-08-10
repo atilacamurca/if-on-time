@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="match_parent">
+   <PreferenceCategory android:title="@string/general_pref">
+      <EditTextPreference
+              android:key="pref_host"
+              android:title="@string/pref_host"
+              android:summary="@string/pref_host_summary"
+              android:dialogTitle="@string/pref_host_dialog"
+              android:defaultValue="10.50.40.22" />
+
+      <EditTextPreference
+              android:key="pref_port"
+              android:title="@string/pref_port"
+              android:summary="@string/pref_port_summary"
+              android:dialogTitle="@string/pref_port_dialog"
+              android:defaultValue="8080" />
+   </PreferenceCategory>
+</PreferenceScreen>

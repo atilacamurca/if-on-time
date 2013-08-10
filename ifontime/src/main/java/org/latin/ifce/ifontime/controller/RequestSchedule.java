@@ -31,8 +31,11 @@ public class RequestSchedule {
    private InputStream stream;
    private JSONObject obj;
    private String answer;
-   // TODO: colocar URL em SharedPreferences
-   private static final String URL = "http://10.50.40.248:8080/get?";
+   private String url;
+
+   public RequestSchedule(String host, String port) {
+      url = "http://" + host + ":" + port + "/get?";
+   }
 
    public JSONObject getAnswer(String hash) throws Exception {
       send(hash);
@@ -68,15 +71,12 @@ public class RequestSchedule {
 
    private void send(String hash) throws Exception {
       try {
-         HttpParams httpparams = new BasicHttpParams();
-         HttpConnectionParams.setConnectionTimeout(httpparams, 30000);
-         HttpConnectionParams.setSoTimeout(httpparams, 1);
-         DefaultHttpClient httpClient = new DefaultHttpClient(httpparams);
+         DefaultHttpClient httpClient = new DefaultHttpClient();
          List<NameValuePair> params = new ArrayList<NameValuePair>();
          params.add(new BasicNameValuePair("hash", hash));
          String paramString = URLEncodedUtils.format(params, "utf-8");
 
-         HttpGet get = new HttpGet(URL + paramString);
+         HttpGet get = new HttpGet(url + paramString);
          Log.d("[DEBUG]", get.getURI().toURL().toString());
 
          HttpResponse response = httpClient.execute(get);
