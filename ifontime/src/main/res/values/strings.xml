@@ -2,7 +2,9 @@
 <resources>
 
     <string name="app_name">IF on time</string>
+    <string name="app_preferences">Preferences - IF on time</string>
     <string name="action_load_schedules">Load schedules</string>
+    <string name="action_preferences">Preferences</string>
     <string name="hello_world">Hello world!</string>
    <string name="sql_create_table_horarios"><![CDATA[
            create table horarios (
@@ -32,5 +34,12 @@
    <string name="access_err">Error while accessing server.</string>
    <string name="ok_text">Ok</string>
    <string name="error_occurred">An error occurred</string>
+   <string name="general_pref">General</string>
+   <string name="pref_host">Server</string>
+   <string name="pref_host_summary">IP address of the server</string>
+   <string name="pref_host_dialog">Enter the IP address</string>
+   <string name="pref_port">Port</string>
+   <string name="pref_port_summary">Port of the service</string>
+   <string name="pref_port_dialog">Enter the port</string>
 
 </resources>
