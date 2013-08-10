@@ -22,8 +22,7 @@ public class Helper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(context.getString(R.string.sql_create_table_horarios));
-      db.execSQL(context.getString(R.string.sql_insert_default));
-	}
+    }
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int odlVersion, int newVersion) {
