@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -60,6 +59,7 @@ public class MainActivity extends Activity {
 
    private static final String DIA_DA_SEMANA = "diaDaSemana";
    private static final String CALENDARIO = "calendar";
+
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -161,14 +161,12 @@ public class MainActivity extends Activity {
 
          String err = json.getString("error");
          if (! "".equals(err)) {
-            Log.d("[DEBUG]", err);
             hasErrors = true;
             error = new Exception(err);
             return;
          }
 
          int deleted = helper.deleteAll();
-         Log.d("MainActivity", "deleting " + deleted + " row(s)...");
 
          JSONArray rows = json.getJSONArray("rows");
          for (int i = 0; i < rows.length(); i++) {
@@ -182,17 +180,14 @@ public class MainActivity extends Activity {
             values.put("dia_da_semana", row.getInt("dia_da_semana"));
 
             helper.create(values);
-            Log.i("MainActivity", "inserting " + i + " value(s)");
          }
       } catch (HttpHostConnectException e) {
          hasErrors = true;
          error = new Exception(getString(R.string.access_err));
       } catch (JSONException e) {
-         Log.e("RequestSchedule", e.getMessage(), e);
          hasErrors = true;
          error = e;
       } catch (Exception e) {
-         Log.e("RequestSchedule", e.getMessage(), e);
          hasErrors = true;
          error = e;
       }
@@ -311,7 +306,6 @@ public class MainActivity extends Activity {
             diaDaSemana--;
             calendar.add(calendar.DAY_OF_YEAR, -1);
         }
-
         load();
     }
 
@@ -326,7 +320,6 @@ public class MainActivity extends Activity {
             diaDaSemana++;
             calendar.add(calendar.DAY_OF_YEAR, 1);
         }
-
         load();
     }
 
