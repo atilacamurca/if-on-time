@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">IF on time</string>
+    <string name="app_preferences">Preferências - IF on time</string>
+    <string name="action_load_schedules">Carregar horários</string>
+    <string name="action_preferences">Preferências</string>
+    <string name="back_text">Voltar</string>
+   <string name="next_text">Próximo</string>
+   <string name="loading_schedules_text">Carregando horários ...</string>
+   <string name="Title">Horários</string>
+   <string name="load_schedules">Carregar horários</string>
+   <string name="code_text">Código</string>
+   <string name="code_not_informed_err">Código não informado.</string>
+   <string name="network_not_available_err">rede não disponível.</string>
+   <string name="access_err">Erro ao acessar o servidor.</string>
+   <string name="ok_text">Ok</string>
+   <string name="error_occurred">Ocorreu um erro</string>
+   <string name="general_pref">Geral</string>
+   <string name="pref_host">Servidor</string>
+   <string name="pref_host_summary">Endereço ip do servidor</string>
+   <string name="pref_host_dialog">Digite o endereço ip</string>
+   <string name="pref_port">Porta</string>
+   <string name="pref_port_summary">Porta do serviço</string>
+   <string name="pref_port_dialog">Insira a porta</string>
+
+</resources>
