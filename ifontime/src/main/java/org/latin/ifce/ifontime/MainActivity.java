@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -63,14 +64,18 @@ public class MainActivity extends Activity {
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.activity_main);
       if(savedInstanceState != null) {
           diaDaSemana = savedInstanceState.getInt(DIA_DA_SEMANA);
           calendar.setTimeInMillis(savedInstanceState.getLong(CALENDARIO));
       } else {
           diaDaSemana = calendar.get(Calendar.DAY_OF_WEEK);
       }
-      load();
+
+      if (helper.existsAnySchedule()) {
+         load();
+      } else {
+         showDetailsToCompleteInstallation();
+      }
    }
 
    @Override
@@ -82,7 +87,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(CALENDARIO,calendar.getTime().getTime());
+        outState.putLong(CALENDARIO, calendar.getTime().getTime());
         outState.putInt(DIA_DA_SEMANA, diaDaSemana);
     }
 
@@ -167,7 +172,6 @@ public class MainActivity extends Activity {
          }
 
          int deleted = helper.deleteAll();
-
          JSONArray rows = json.getJSONArray("rows");
          for (int i = 0; i < rows.length(); i++) {
             JSONObject row = rows.getJSONObject(i);
@@ -200,6 +204,17 @@ public class MainActivity extends Activity {
          return false;
       }
       return true;
+   }
+
+   private void showDetailsToCompleteInstallation() {
+      setContentView(R.layout.activity_main_empty);
+      Resources res = getResources();
+      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+      String host = preferences.getString("pref_host", "10.50.40.22");
+      String port = preferences.getString("pref_port", "8080");
+      String text = String.format(res.getString(R.string.text_complete_installation), host, port);
+      TextView tvCompleteInstallation = (TextView) findViewById(R.id.text_complete_installation);
+      tvCompleteInstallation.setText(text);
    }
 
    public boolean isNetworkAvailable() {
@@ -256,10 +271,10 @@ public class MainActivity extends Activity {
    }
 
    private void load() {
+      setContentView(R.layout.activity_main);
       lvHorarios = (ListView) findViewById(R.id.lvHorarios);
       tvData = (TextView) findViewById(R.id.tvData);
       loadSchedules();
-
    }
 
    final Handler handler = new Handler() {
@@ -269,7 +284,7 @@ public class MainActivity extends Activity {
             if (dialog.isShowing()) {
                dialog.dismiss();
             }
-            loadSchedules();
+            load();
          }
       }
    };

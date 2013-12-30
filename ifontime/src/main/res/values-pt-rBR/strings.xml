@@ -23,5 +23,7 @@
    <string name="pref_port">Porta</string>
    <string name="pref_port_summary">Porta do serviço</string>
    <string name="pref_port_dialog">Insira a porta</string>
+   <string name="fry_not_sure_if">futurama fry not sure if</string>
+    <string name="text_complete_installation">Para completar a instalação vá até http://%1$s:%2$s através de seu desktop e siga as instruções.</string>
 
 </resources>

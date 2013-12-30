@@ -35,5 +35,8 @@
    <string name="pref_port">Port</string>
    <string name="pref_port_summary">Port of the service</string>
    <string name="pref_port_dialog">Enter the port</string>
+   <string name="fry_not_sure_if">futurama fry not sure if</string>
+    <string name="text_fry_not_sure_if">Not sure if you complete the installation or this app is just stupid…</string>
+    <string name="text_complete_installation">To complete installation go to http://%1$s:%2$s through your desktop and follow the instructions.</string>
 
 </resources>

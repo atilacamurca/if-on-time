@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp">
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_fry_not_sure_if"
+                    android:id="@+id/text_fry_not_sure_if"
+                    android:layout_gravity="left|center_vertical"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="316dp"
+                    android:id="@+id/fry_not_sure_if"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/fry_not_sure_if"
+                    android:src="@drawable/ic_futurama_fry_not_sure_if"
+                    android:padding="8dp"/>
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_complete_installation"
+                    android:id="@+id/text_complete_installation"
+                    android:layout_gravity="left|center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

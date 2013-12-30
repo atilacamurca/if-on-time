@@ -34,4 +34,12 @@ public class HorarioHelper extends Helper {
    public void create(ContentValues values) {
       create("horarios", null, values);
    }
+
+   public boolean existsAnySchedule() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("SELECT COUNT(*) as count FROM horarios ");
+      Cursor c = getReadableDatabase().rawQuery(builder.toString(), new String[]{});
+      c.moveToFirst();
+      return (c.getInt(c.getColumnIndex("count")) > 0 ? true : false);
+   }
 }
